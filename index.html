@@ -4,17 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>秘密の入口</title>
-
 <meta name="robots" content="noindex,nofollow">
 
 <style>
 body {
   margin: 0;
   font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-  font-size: 1.2em;
   background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
   color: white;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,6 +26,10 @@ body {
   width: 90%;
   max-width: 360px;
   box-shadow: 0 0 25px cyan;
+}
+
+h1, h2 {
+  text-shadow: 0 0 10px gold;
 }
 
 input, button {
@@ -47,15 +49,14 @@ button {
 #error {
   color: #ff6666;
   display: none;
-  margin-top: 10px;
 }
 
 #count {
-  margin-top: 5px;
   color: #ffcc66;
+  margin-top: 5px;
 }
 
-/* 🚫 警察ロック画面 */
+/* 🚓 ロック画面 */
 #lock {
   display: none;
   position: fixed;
@@ -68,7 +69,6 @@ button {
   text-align: center;
 }
 
-/* 吹き出し */
 .bubble {
   background: white;
   color: black;
@@ -99,8 +99,28 @@ button {
 
 #timer {
   margin-top: 15px;
-  font-size: 1.3em;
+  font-size: 1.2em;
   color: yellow;
+}
+
+/* 🧠 クイズ画面 */
+#quiz {
+  display: none;
+  padding: 20px;
+  max-width: 600px;
+}
+
+details {
+  background: rgba(0,0,0,0.5);
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 15px;
+  font-size: 1.2em;
+}
+
+summary {
+  cursor: pointer;
+  font-size: 1.3em;
 }
 
 @keyframes pop {
@@ -120,6 +140,7 @@ button {
 
 <body>
 
+<!-- 🔒 パスワード画面 -->
 <div class="container" id="panel">
   <h1>🔒 立入禁止</h1>
   <p>パスワードを入力してください</p>
@@ -132,10 +153,38 @@ button {
 <!-- 🚓 警察画面 -->
 <div id="lock">
   <div class="bubble">確保！👮‍♂️</div>
-
   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Japanese_police_officer.jpg">
-
   <div id="timer">解除まで 10 秒</div>
+</div>
+
+<!-- 🧠 クイズ画面 -->
+<div id="quiz">
+  <h2>📜 年号 → 世紀クイズ</h2>
+
+  <details>
+    <summary><b>問1（レベル1）</b> 645年は何世紀？</summary>
+    👉 7世紀
+  </details>
+
+  <details>
+    <summary><b>問2（レベル2）</b> 1192年は何世紀？</summary>
+    👉 12世紀
+  </details>
+
+  <details>
+    <summary><b>問3（レベル3）</b> 1600年は何世紀？</summary>
+    👉 16世紀
+  </details>
+
+  <details>
+    <summary><b>問4（レベル4）</b> 1868年は何世紀？</summary>
+    👉 19世紀
+  </details>
+
+  <details>
+    <summary><b>問5（レベル5）</b> 2001年は何世紀？</summary>
+    👉 21世紀
+  </details>
 </div>
 
 <audio id="siren" loop>
@@ -155,7 +204,11 @@ const pw = document.getElementById("pw");
 const timer = document.getElementById("timer");
 
 function check() {
-  if (pw.value === "tamanawa") return;
+  if (pw.value === "tamanawa") {
+    panel.style.display = "none";
+    document.getElementById("quiz").style.display = "block";
+    return;
+  }
 
   tries--;
   error.style.display = "block";
@@ -168,12 +221,10 @@ function lock() {
   panel.style.display = "none";
   lockScreen.style.display = "flex";
 
-  // 📳 バイブ（対応端末）
   if (navigator.vibrate) {
-    navigator.vibrate([300, 200, 300, 200, 500]);
+    navigator.vibrate([300, 200, 300]);
   }
 
-  // 🔊 サイレン（失敗しても止まらない）
   try { siren.play(); } catch(e) {}
 
   let time = 10;
