@@ -2,107 +2,213 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>年代の表し方クイズ</title>
+<title>秘密の入口</title>
+
+<meta name="robots" content="noindex,nofollow">
 
 <style>
 body {
+  margin: 0;
   font-family: "Segoe UI", sans-serif;
-  background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
+  background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
   color: white;
-  padding: 30px;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.container {
+  background: rgba(0,0,0,0.7);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 30px cyan;
+  width: 340px;
+  transition: 0.3s;
 }
 
 h1 {
-  text-align: center;
-  font-size: 2.2em;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   text-shadow: 0 0 15px gold;
 }
 
-/* details 全体 */
-details {
-  background: rgba(0,0,0,0.5);
-  border-radius: 15px;
-  margin: 20px auto;
-  padding: 15px 20px;
-  max-width: 600px;
-  box-shadow: 0 0 15px rgba(0,255,255,0.4);
-  transition: all 0.4s ease;
-}
-
-/* hover演出 */
-details:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 25px rgba(0,255,255,0.8);
-}
-
-/* summary（問題文） */
-summary {
-  font-size: 1.2em;
-  font-weight: bold;
-  cursor: pointer;
-  list-style: none;
-  position: relative;
-}
-
-summary::after {
-  content: " ▶";
-  color: gold;
+input {
+  width: 80%;
+  padding: 10px;
   font-size: 1.1em;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  text-align: center;
 }
 
-/* 開いたとき */
-details[open] summary::after {
-  content: " ▼";
-}
-
-/* 答え部分 */
-.answer {
+button {
   margin-top: 15px;
-  font-size: 1.4em;
-  font-weight: bold;
-  color: #00ffcc;
-  text-shadow: 0 0 10px #00ffcc;
-  animation: pop 0.4s ease-out;
+  padding: 10px 25px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  background: linear-gradient(45deg, gold, orange);
+  box-shadow: 0 0 10px gold;
 }
 
-/* ポップ演出 */
+button:hover {
+  transform: scale(1.05);
+}
+
+#error {
+  margin-top: 10px;
+  color: #ff6666;
+  display: none;
+}
+
+#count {
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: #ffcc66;
+}
+
+/* ✅ 成功画面 */
+#success {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #000428, #004e92);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 10;
+}
+
+#success h2 {
+  font-size: 3em;
+  color: gold;
+  text-shadow: 0 0 30px gold;
+  animation: pop 0.6s ease;
+}
+
+/* 🚫 ロック画面 */
+#lock {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #2c0000, #000000);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 20;
+}
+
+#lock h2 {
+  font-size: 2.8em;
+  color: red;
+  text-shadow: 0 0 30px red;
+  animation: shake 0.5s infinite;
+}
+
+#lock p {
+  margin-top: 10px;
+  color: #ff9999;
+}
+
+/* 紙吹雪 */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  from { transform: translateY(-10vh) rotate(0deg); }
+  to { transform: translateY(110vh) rotate(720deg); }
+}
+
 @keyframes pop {
-  0% {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  0% { transform: scale(0.2); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
 }
 </style>
 </head>
 
 <body>
 
-<h1>✨ 年代の表し方 クイズ ✨</h1>
+<div class="container" id="panel">
+  <h1>🔒 秘密の入口</h1>
+  <p>パスワードを入力してください</p>
+  <input type="password" id="pw" placeholder="password">
+  <br>
+  <button onclick="check()">ENTER</button>
+  <div id="error">❌ パスワードが違います</div>
+  <div id="count">残り試行回数：3</div>
+</div>
 
-<details>
-  <summary>問1（レベル1） 645年は何世紀ですか？</summary>
-  <div class="answer">👉 7世紀</div>
-</details>
+<div id="success">
+  <h2>🎉 ACCESS GRANTED 🎉</h2>
+  <p>ようこそ！</p>
+</div>
 
-<details>
-  <summary>問2（レベル2） 1200年は何世紀ですか？</summary>
-  <div class="answer">👉 12世紀</div>
-</details>
+<div id="lock">
+  <h2>🚫 ACCESS LOCKED 🚫</h2>
+  <p>試行回数を超えました</p>
+</div>
 
-<details>
-  <summary>問3（レベル3） 1世紀は何年から何年まで？</summary>
-  <div class="answer">👉 西暦1年〜100年</div>
-</details>
+<script>
+let tries = 3;
 
-<details>
-  <summary>問4（レベル4） 紀元前300年は何世紀？</summary>
-  <div class="answer">👉 紀元前3世紀</div>
-</details>
+function check() {
+  const pw = document.getElementById("pw").value;
+
+  if (pw === "tamanwa") {
+    document.getElementById("panel").style.display = "none";
+    const success = document.getElementById("success");
+    success.style.display = "flex";
+    confetti();
+
+    setTimeout(() => {
+      // 次のページがある場合
+      // window.location.href = "quiz.html";
+    }, 3000);
+
+  } else {
+    tries--;
+    document.getElementById("error").style.display = "block";
+    document.getElementById("count").textContent = "残り試行回数：" + tries;
+
+    if (tries <= 0) {
+      lock();
+    }
+  }
+}
+
+function lock() {
+  document.getElementById("panel").style.display = "none";
+  document.getElementById("lock").style.display = "flex";
+}
+
+function confetti() {
+  for (let i = 0; i < 150; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = `hsl(${Math.random()*360},100%,50%)`;
+    c.style.animationDuration = (Math.random()*2 + 2) + "s";
+    c.style.opacity = Math.random();
+    document.body.appendChild(c);
+  }
+}
+</script>
 
 </body>
 </html>
