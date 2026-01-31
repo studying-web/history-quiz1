@@ -114,6 +114,16 @@ button:hover {
   color: #ff9999;
 }
 
+/* 🧠 クイズ画面 */
+#quiz {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #1a2a3a, #0f2027);
+  padding: 40px;
+  overflow-y: auto;
+}
+
 /* 紙吹雪 */
 .confetti {
   position: absolute;
@@ -164,6 +174,26 @@ button:hover {
   <p>試行回数を超えました</p>
 </div>
 
+<!-- 🧠 クイズ画面 -->
+<div id="quiz">
+  <h2>📜 歴史クイズ</h2>
+
+  <details>
+    <summary><b>問1</b> 645年は何世紀？</summary>
+    👉 7世紀
+  </details>
+
+  <details>
+    <summary><b>問2</b> 1192年は何世紀？</summary>
+    👉 12世紀
+  </details>
+
+  <details>
+    <summary><b>問3</b> 1600年は何世紀？</summary>
+    👉 16世紀
+  </details>
+</div>
+
 <script>
 let tries = 3;
 
@@ -177,9 +207,9 @@ function check() {
     confetti();
 
     setTimeout(() => {
-      // 次のページがある場合
-      // window.location.href = "quiz.html";
-    }, 3000);
+      success.style.display = "none";
+      document.getElementById("quiz").style.display = "block";
+    }, 2500);
 
   } else {
     tries--;
